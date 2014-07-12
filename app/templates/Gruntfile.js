@@ -1,5 +1,7 @@
 'use strict';
 
+var path = require('path');
+
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -14,7 +16,7 @@ module.exports = function(grunt) {
             } else if (type === 'css') {
               renamedType = 'styles';
             }
-            return renamedType;
+            return path.join(renamedType, 'lib');
           }
         }
       }

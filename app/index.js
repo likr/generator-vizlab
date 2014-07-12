@@ -47,6 +47,7 @@ var VizlabGenerator = yeoman.generators.Base.extend({
     this.mkdir('app/styles');
     this.mkdir('coffee');
 
+    this.copy('_gitignore', '.gitignore');
     this.copy('_package.json', 'package.json');
     this.copy('_bower.json', 'bower.json');
     this.copy('Gruntfile.js', 'Gruntfile.js');
