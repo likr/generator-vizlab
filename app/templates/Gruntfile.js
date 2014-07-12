@@ -40,12 +40,20 @@ module.exports = function(grunt) {
           }
         ]
       }
+    },
+    watch: {
+      coffee: {
+        files: ['coffee/**/*.coffee'],
+        tasks: ['build']
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-coffee');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('compile', ['coffee', 'browserify']);
+  grunt.registerTask('build', ['coffee', 'browserify']);
+  grunt.registerTask('default', ['build']);
 };

@@ -13,7 +13,7 @@ var VizlabGenerator = yeoman.generators.Base.extend({
       if (!this.options['skip-install']) {
         this.installDependencies({
           callback: function () {
-            this.spawnCommand('grunt', ['bower', 'compile']);
+            this.spawnCommand('grunt', ['bower', 'build']);
           }.bind(this)
         });
       }
