@@ -1,5 +1,11 @@
 {
-  "name": "package",
+  "name": "<%= appname %>",
   "version": "0.0.0",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-bower-task": "^0.3.4",
+    "grunt-browserify": "^2.1.3",
+    "grunt-contrib-coffee": "^0.10.1"
+  }
 }

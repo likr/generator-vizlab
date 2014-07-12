@@ -1,18 +1,21 @@
 'use strict';
-var util = require('util');
-var path = require('path');
 var yeoman = require('yeoman-generator');
 var yosay = require('yosay');
-var chalk = require('chalk');
 
 
 var VizlabGenerator = yeoman.generators.Base.extend({
   init: function () {
     this.pkg = require('../package.json');
 
+    this.appname = this.appname.replace(/\s+/g, '-');
+
     this.on('end', function () {
       if (!this.options['skip-install']) {
-        this.installDependencies();
+        this.installDependencies({
+          callback: function () {
+            this.spawnCommand('grunt', ['bower', 'compile']);
+          }.bind(this)
+        });
       }
     });
   },
@@ -24,14 +27,14 @@ var VizlabGenerator = yeoman.generators.Base.extend({
     this.log(yosay('Welcome to the marvelous Vizlab generator!'));
 
     var prompts = [{
-      type: 'confirm',
-      name: 'someOption',
-      message: 'Would you like to enable this option?',
-      default: true
+      type: 'input',
+      name: 'appTitle',
+      message: 'App title',
+      default: this.appname
     }];
 
     this.prompt(prompts, function (props) {
-      this.someOption = props.someOption;
+      this.appTitle = props.appTitle;
 
       done();
     }.bind(this));
@@ -39,15 +42,19 @@ var VizlabGenerator = yeoman.generators.Base.extend({
 
   app: function () {
     this.mkdir('app');
-    this.mkdir('app/templates');
+    this.mkdir('app/partials');
+    this.mkdir('app/scripts');
+    this.mkdir('app/styles');
+    this.mkdir('coffee');
 
     this.copy('_package.json', 'package.json');
     this.copy('_bower.json', 'bower.json');
-  },
-
-  projectfiles: function () {
-    this.copy('editorconfig', '.editorconfig');
-    this.copy('jshintrc', '.jshintrc');
+    this.copy('Gruntfile.js', 'Gruntfile.js');
+    this.copy('app/index.html', 'app/index.html');
+    this.copy('app/partials/main.html', 'app/partials/main.html');
+    this.copy('app/styles/app.css', 'app/styles/' + this.appname + '.css');
+    this.copy('coffee/app.coffee', 'coffee/' + this.appname + '.coffee');
+    this.copy('coffee/controllers/main.coffee', 'coffee/controllers/main.coffee');
   }
 });
 
