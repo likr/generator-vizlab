@@ -70,6 +70,7 @@ var VizlabGenerator = yeoman.generators.Base.extend({
     this.template('_gitignore', '.gitignore');
     this.template('_package.json', 'package.json');
     this.template('_bower.json', 'bower.json');
+    this.template('jshintrc', 'src/.jshintrc');
     this.template('Gruntfile.js', 'Gruntfile.js');
     this.template('app/index.html', 'app/index.html');
     this.template('app/partials/main.html', 'app/partials/main.html');
