@@ -11,7 +11,7 @@ module.exports = function(grunt) {
           targetDir: 'app',
           layout: function(type) {
             var renamedType = type;
-            if (type === 'js') {
+            if (type === 'js' || type === 'map') {
               renamedType = 'scripts';
             } else if (type === 'css') {
               renamedType = 'styles';
@@ -28,32 +28,73 @@ module.exports = function(grunt) {
         }
       }
     },
+    bump: {
+      options: {
+        files: ['package.json', 'bower.json'],
+        commit: false,
+        createTag: false,
+        push: false
+      }
+    },<% if (lang === 'CoffeeScript') { %>
     coffee: {
       compile: {
         files: [
           {
             expand: true,
-            cwd: 'coffee/',
+            cwd: 'src/',
             src: ['**/*.coffee'],
-            dest: 'js',
+            dest: 'build',
             ext: '.js'
           }
         ]
       }
-    },
-    watch: {
-      coffee: {
-        files: ['coffee/**/*.coffee'],
-        tasks: ['build']
+    },<% } %>
+    concat: {
+      dist: {
+        src: [
+          'build/<%= appName %>.js',
+          'build/services/*.js',
+          'build/directives/*.js',
+          'build/controllers/*.js'
+        ],
+        dest: 'app/scripts/<%= appName %>.js'
       }
+    },<% if (lang === 'TraceurCompiler') { %>
+    traceur: {
+      options: {
+        modules: 'inline'
+      },
+      src: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/',
+            src: ['**/*.js'],
+            dest: 'build'
+          }
+        ]
+      }
+    },<% } %>
+    watch: {<% if (lang === 'CoffeeScript') { %>
+      src: {
+        files: ['src/**/*.coffee'],
+        tasks: ['build']
+      }<% } else if (lang === 'TraceurCompiler') { %>
+      src: {
+        files: ['src/**/*.js'],
+        tasks: ['build']
+      }<% } %>
     }
   });
 
   grunt.loadNpmTasks('grunt-bower-task');
-  grunt.loadNpmTasks('grunt-browserify');
-  grunt.loadNpmTasks('grunt-contrib-coffee');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-
-  grunt.registerTask('build', ['coffee', 'browserify']);
+  grunt.loadNpmTasks('grunt-browserify');<% if (lang === 'CoffeeScript') { %>
+  grunt.loadNpmTasks('grunt-contrib-coffee');<% } %>
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-watch');<% if (lang === 'TraceurCompiler') { %>
+  grunt.loadNpmTasks('grunt-traceur');<% } %>
+<% if (lang === 'coffee') { %>
+  grunt.registerTask('build', ['coffee', 'concat']);<% } else if (lang === 'TraceurCompiler') { %>
+  grunt.registerTask('build', ['traceur', 'concat']);<% } %>
   grunt.registerTask('default', ['build']);
 };
